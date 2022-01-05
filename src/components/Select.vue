@@ -1,6 +1,6 @@
 <template>
   <div class="flex justify-center">
-    <div class="mb-3 xl:w-96">
+    <div class="mb-3 w-1/3">
       <select
         class="
           form-select
