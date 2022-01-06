@@ -1,7 +1,10 @@
 <template>
   <div class="container">
     <Select />
-    <div v-if="weatherInfo" class="mt-4 flex items-center justify-center">
+    <div
+      v-if="weatherInfo && weatherInfo.cod === 200 && weatherInfo.weather"
+      class="mt-4 flex items-center justify-center"
+    >
       <div
         class="
           flex flex-col
@@ -42,7 +45,7 @@
         </div>
         <div class="flex flex-row items-center justify-center mt-6">
           <div class="font-medium text-6xl">{{ weatherInfo.main.temp }}°C</div>
-          <div class="flex flex-col items-center ml-6">
+          <div class="flex flex-col items-center ml-24">
             <div>{{ weatherInfo.weather[0].main }}</div>
             <div class="mt-1">
               <span class="text-sm"><i class="far fa-long-arrow-up"></i></span>
@@ -61,40 +64,33 @@
           </div>
         </div>
         <div class="flex flex-row justify-between mt-6">
-          <div class="flex flex-col items-center">
-            <div class="font-medium text-sm">Wind</div>
-            <div class="text-sm text-gray-500">
-              {{ weatherInfo.wind.speed }}k/h
-            </div>
-          </div>
-          <div class="flex flex-col items-center">
-            <div class="font-medium text-sm">Humidity</div>
-            <div class="text-sm text-gray-500">
-              {{ weatherInfo.main.humidity }}%
-            </div>
-          </div>
-          <div class="flex flex-col items-center">
-            <div class="font-medium text-sm">Visibility</div>
-            <div class="text-sm text-gray-500">
-              {{ weatherInfo.visibility }}m
-            </div>
-          </div>
+          <Info text="Wind" unit="k/h" :value="weatherInfo.wind.speed" />
+          <Info text="Humidity" unit="%" :value="weatherInfo.main.humidity" />
+          <Info text="Visibility" unit="m" :value="weatherInfo.visibility" />
         </div>
       </div>
     </div>
+    <Alert v-if="error" :message="error" />
   </div>
 </template>
 
 <script>
 import Select from "@/components/Select.vue";
+import Info from "@/components/Info.vue";
+import Alert from "@/components/Alert.vue";
 export default {
   name: "Weather Card",
   components: {
     Select,
+    Info,
+    Alert,
   },
   computed: {
     weatherInfo() {
       return this.$store.state.weatherInfo;
+    },
+    error() {
+      return this.$store.state.error;
     },
   },
   methods: {
